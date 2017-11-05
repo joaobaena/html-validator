@@ -1,0 +1,81 @@
+@()(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@main("URL analyser") {
+<h1>Enter URL to be analysed</h1>
+<h5>Ex. http://www.google.com</h5>
+
+<fieldset>
+    <form>
+        <input type="text" name="url" id="url"/>
+        <input type="button" value="Submit URL" id="submitUrl"/>
+    </form>
+</fieldset>
+
+<p id="ct"></p>
+<div id=results_div>
+    <table id="linklist">
+        <tr>
+            <th>Analysis</th>
+            <th>Result</th>
+        </tr>
+        <tr>
+            <td>HTML Version</td>
+            <td id=version></td>
+        </tr>
+        <tr>
+            <td>Page Title</td>
+            <td id=title></td>
+        </tr>
+        <tr>
+            <th>Links</th>
+        </tr>
+        <tr>
+            <td>Internal Links</td>
+            <td id=internal></td>
+        </tr>
+        <tr>
+            <td>External Links</td>
+            <td id=external></td>
+        </tr>
+        <tr>
+            <th>Link Validation</th>
+            <th>Status</th>
+            <th>Status Text</th>
+        </tr>
+    </table>
+</div>
+
+</ul>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#results_div").hide();
+    });
+    $('#submitUrl').click(function() {
+       $("#results_div").hide();
+       $("#ct").text("Loading...")
+       var urlS = $('#url');
+       var url = urlS.val();
+       jsRoutes.controllers.AnalyserController.submitUrl(url).ajax({
+          success : function (results) {
+              $("#version").text(results.version)
+              $("#title").text(results.title)
+              $("#internal").text(results.internalLinks)
+              $("#external").text(results.externalLinks)
+              var links = results.linksValidation
+              var list = "";
+              $.each(links, function(k,v) {
+
+               list += "<tr><td>"+k+"</td><td>"+v.isReachable+"</td><td>"+v.msg+"</td></tr>"
+              });
+              $("#linklist").append(list);
+              $("#ct").text("")
+
+              $("#results_div").show();
+          },
+          error : function (errormsg) {
+              $("#ct").text(errormsg.responseText)
+          }
+        });
+    });
+    </script>
+}

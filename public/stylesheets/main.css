@@ -1,0 +1,26 @@
+body {
+    font-family: verdana;
+}
+
+h1 {
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse:collapse;
+}
+
+
+
+td {
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
+}
+th {
+    background-color: #4CAF50;
+    color: white;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid #ddd;
+}
